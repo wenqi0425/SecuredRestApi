@@ -12,43 +12,43 @@ The code structure design and steps:
 
 Authentication: register, confirming identity by JWT
 
-// JWT setting
+JWT setting
 1) JWT.cs mapping with appsettings.json/JWT
 2) services.Configure<JWT> / services.AddAuthentication
 
-// user model
+User model
 3) Models/ApplicationUser.cs inherit from IdentityUser
 
-// prepare database connection
+Prepare database connection
 4) DbContext and connection string
 5) services.AddDbContext
 
-// default user for test 
+Default user for test 
 6) Authorization.cs to define the user roles: Administrator, Moderator, User
 7) create a default user with given constant value to test the database
 8) adding service in to Program.cs. 
-Once the application first run, the default data will be posted to the database, if these data doesn’t exists.
+Once the application first run, the default data will be posted to the database, if these data doesnâ€™t exists.
 9) services.AddIdentity / services.AddScoped
 
-// Service to contain core user functions: register / generate JWT / Role... 
+Service to contain core user functions: register / generate JWT / Role... 
 10) Services/IUserService.cs
 11) Services/UserService.cs
 
-// UserController
+UserController
 12) UserController : ControllerBase
 
-// migration
+Database migration
 13) database migration: 
 Show defaule user and default roles in the database
 
-// register 
+Register 
 14) RegisterModel.cs
 15) add register function to IUserService.cs
 16) add register function to UserService 
 17) add register function to UserController
 18) postman test
 
-// Generate JWT for authentication
+Generate JWT
 19) to request token: 
 TokenRequestModel.cs: Email / Password 
 20) to generate and return token: 
@@ -57,15 +57,17 @@ AuthenticationModel: message, IsAuthenticated, username, email, roles, Token
 22) add token function to UserService 
 23) add token function to UserController
 24) postman test
+
 Authentication is done
 
-Authorization part: verifying user, display different content according to user role
-// SecuredController
+Authorization: verifying user, display different content according to user role
+
+SecuredController
 25) SecuredController : ControllerBase
 If the user is authenticated, it will show the secured data. 
 26) postman test
 
-// Adding Roles to User
+Adding Roles to User
 27) AddRoleModel.cs
 28) add role function to IUserService.cs
 29) add role function to UserService 
