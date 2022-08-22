@@ -125,5 +125,31 @@ namespace SecuredRestApi.Services
             
             return jwtSecurityToken;
         }
+
+        public async Task<string> AddRoleAsync(AddRoleModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if(user == null)
+            {
+                return $"No user registered with {model.Email}.";
+            }
+
+            if(await _userManager.CheckPasswordAsync(user, model.Password)) 
+            {
+                var roleExists = Enum.GetNames(typeof(Authorization.Roles)).Any(x => x.ToLower() == model.Role.ToLower());
+                
+                // valid user
+                if(roleExists)
+                {
+                    var validRole = Enum.GetValues(typeof(Authorization.Roles)).Cast<Authorization.Roles>().Where(x => x.ToString().ToLower() == model.Role.ToLower()).FirstOrDefault();
+                    await _userManager.AddToRoleAsync(user, validRole.ToString());
+                    return $"Added {model.Role} to user {model.Email}.";  // add role to user
+                }
+
+                return $"Role {model.Role} not found.";
+            }
+
+            return $"Incorrect credentials for users {user.Email}.";
+        }
     }
 }
